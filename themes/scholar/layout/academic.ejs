@@ -1,0 +1,8 @@
+<div class="academic-shell container">
+  <header class="page-heading"><a class="breadcrumb" href="<%= url_for('/') %>">Home</a><span class="breadcrumb-separator">/</span><span class="breadcrumb current"><%= page.title %></span><div class="page-title-row"><div><p class="eyebrow">THE ACADEMIC SIDE</p><h1><%= page.title %><i>.</i></h1><p class="page-subtitle"><%= page.subtitle %></p></div><span class="page-number" aria-hidden="true"><%= page.number %></span></div></header>
+  <div class="academic-content">
+    <% if (page.section === 'about') { %><%- partial('_partial/about') %><%- partial('_partial/education') %>
+    <% } else if (['research', 'publications', 'projects', 'teaching', 'contact'].includes(page.section)) { %><%- partial('_partial/' + page.section) %><% } %>
+  </div>
+  <a class="back-home" href="<%= url_for('/') %>">← Back to the stars</a>
+</div>

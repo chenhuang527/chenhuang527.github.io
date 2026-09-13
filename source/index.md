@@ -1,4 +1,5 @@
 ---
-title: Resume
-layout: resume
+title: Home
+layout: landing
+section: home
 ---

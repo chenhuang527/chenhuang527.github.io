@@ -1,0 +1,20 @@
+<% const p = site.data.profile; %>
+<section class="landing container" aria-labelledby="hero-name">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="signal"></span> LANGUAGE, THROUGH A DIFFERENT LENS</p>
+    <h1 id="hero-name"><%= p.name.split(' ').slice(0,-1).join(' ') %><br><span><%= p.name.split(' ').slice(-1)[0] %><i>.</i></span></h1>
+    <div class="hero-position"><p class="hero-role"><%= p.role %></p><p class="hero-institution"><%= p.institution %></p></div>
+    <p class="hero-focus"><%= p.focus %></p><p class="hero-intro"><%= p.intro %></p>
+    <div class="hero-actions"><a class="button primary" href="<%= url_for('/research.html') %>">View Research <span aria-hidden="true">↗</span></a><% if(p.cv) { %><a class="button secondary" href="<%= url_for('/' + p.cv) %>" target="_blank" rel="noopener">View CV <span aria-hidden="true">↓</span></a><% } %></div>
+  </div>
+  <div class="hero-visual" aria-label="<%= p.name %> personal visual"><div class="orbital-scene">
+    <div class="orbit-frame" aria-hidden="true"><span class="orbit-caption">EXPLORING CONNECTIONS</span><span class="orbit-coordinates">NLP / MULTIMODAL LEARNING</span><b class="cross cross-one">+</b><b class="cross cross-two">+</b></div>
+    <div class="orbital-system">
+      <div class="orbital-ring ring-outer" aria-hidden="true"></div><div class="orbital-ring ring-middle" aria-hidden="true"></div><div class="orbital-ring ring-inner" aria-hidden="true"></div>
+      <% if(p.avatar) { %><div class="planet has-portrait"><img src="<%= url_for('/' + p.avatar) %>" alt="Portrait of <%= p.name %>" width="400" height="400"></div><% } else { %><div class="planet"><div class="planet-grid" aria-hidden="true"></div><span class="planet-monogram"><%= p.initials %><i>.</i></span></div><% } %>
+      <span class="satellite satellite-one" aria-hidden="true"></span><span class="satellite satellite-two" aria-hidden="true"></span>
+      <span class="orbit-label label-language">01 <b>Language</b></span><span class="orbit-label label-vision">02 <b>Vision</b></span><span class="orbit-label label-knowledge">03 <b>Knowledge</b></span>
+    </div>
+    <p class="visual-caption"><span></span><%= p.tagline %></p>
+  </div></div>
+</section>

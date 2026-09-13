@@ -10,7 +10,7 @@ public_dir: public
 theme: scholar
 pretty_urls:
   trailing_index: false
-  trailing_html: false
+  trailing_html: true
 exclude:
   - '**/*.example'
 skip_render:

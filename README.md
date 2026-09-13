@@ -1,160 +1,155 @@
-# Chen Huang · Hexo 学术主页
+# Chen Huang · ORBIT 学术主页
 
-这是 Resume 优先的个人学术网站，使用 Hexo + 自定义 scholar 主题 + EJS + 原生 CSS/JavaScript。没有 Vue、React、登录、后台、运行时数据库、博客分类或文章列表。Hexo 自身生成的 db.json 只是本地构建缓存。
+基于现有 Hexo 7 + scholar 自定义主题改造的多页面个人主页。保持 EJS、原生 CSS/JavaScript 和标准 Hexo 结构，无新增依赖。
 
-## 设计分析与改造
+## 本次设计
 
-参考 https://cmymoon.com/ 当前为 Hexo 博客，https://www.cmymoon.com/ 为 DaoHang 对应的个人主页。原项目 README 说明其基于 HeoWeb 修改，实际代码为静态 HTML + jQuery，并非现成 Hexo 主题。
+- Home 是独立 Landing Page，只显示姓名、职位、学校、研究方向、一句简介、个人视觉与 View Research / View CV。
+- About、Research、Publications、Projects、Teaching、Contact 分别生成独立 HTML。不是首页锚点，也不是前端模拟路由。
+- 深蓝星空、蓝紫星云、轨道与姓名缩写构成个人视觉。可换成真实头像。
+- 透明玻璃导航固定在顶部，滚动后加深背景。当前页标记、hover 下划线、移动端菜单。
+- Canvas 星星对鼠标及滚动产生轻微视差，附近星点与指针连接；轨道缓慢旋转、元素浮动、页面进入及滚动渐入。
+- 内页使用深色阅读面板与学术列表，已发表和审稿中稿件明确区分，保留论文筛选与 DOI。
 
-本项目保留其顶部导航、左右首屏、大留白和分区浏览的设计思路，重新实现为学术内容：暖白纸张底色、墨绿点缀、衬线大标题、教育时间轴、研究卡片、论文列表。使用轻量淡入、滚动出现、hover 与当前分区导航。支持移动端、键盘导航、系统减少动画设置和打印。
+设计理念参考 https://cmymoon.com/ 的氛围、导航与视觉层次，以及 https://isakzhang.github.io/index.html 的独立栏目组织。新视觉与代码独立编写，未复制参考站资产。
 
-Hexo 修改方式：source/index.md 指定 resume 布局；主题 layout.ejs 提供公共导航和页脚；resume.ejs 读取 site.data.profile 渲染履历，不遍历 posts。未安装文章、分类、标签或归档生成器。导航目前直接定位首页各区块，无二级菜单。
+## 项目结构
 
-## Windows / IDEA：第一次运行
+```text
+_config.yml                    Hexo 地址、root、主题；保留 .html 链接
+source/
+  index.md                     首页入口，layout: landing
+  about.md                     permalink: about.html
+  research.md                  permalink: research.html
+  publications.md              permalink: publications.html
+  projects.md                  permalink: projects.html
+  teaching.md                  permalink: teaching.html
+  contact.md                   permalink: contact.html
+  _data/profile.yml            唯一个人履历数据入口
+  assets/
+    Chen_Huang_CV.pdf           CV
+    favicon.svg                新轨道图标
+    images/                    可自行建立，放置头像
+themes/scholar/
+  _config.yml                  独立页面导航、effects 动画开关
+  layout/
+    layout.ejs                 星空、导航、公共页脚
+    landing.ejs                首页个人展示
+    academic.ejs               内页标题与内容组织
+    page.ejs                   未来 Markdown 独立页
+    index.ejs                  首页回退模板
+    resume.ejs                 兼容旧入口，现指向 landing
+    _partial/
+      about.ejs                个人介绍
+      education.ejs            教育时间轴（About 内）
+      research.ejs             研究方向
+      publications.ejs         论文列表
+      projects.ejs             科研项目
+      teaching.ejs             教学
+      contact.ejs              联系方式
+  source/css/main.css          完整新版样式、响应式与动画
+  source/js/main.js            菜单、筛选、Canvas 与动画控制
+.github/workflows/pages.yml     已有 GitHub Pages 工作流，继续使用
+package.json                   原有依赖，无新增框架
+legacy/                        原 DaoHang 文件，不参与构建
+public/                        Hexo 输出，不要手工修改
+```
 
-1. 从 https://nodejs.org/ 下载安装 Node.js 22 LTS 或更新的 LTS，安装时保留 npm 与 Add to PATH 选项。重启 IDEA，使 PATH 生效。
-2. IDEA → File → Open → 选择本项目文件夹（包含 package.json 和 _config.yml 的目录）。使用下方 Terminal 即可，无需额外 IDEA 插件。
-3. 在 Terminal 输入：
+## IDEA / Windows 本地运行
+
+IDEA → File → Open → 选择包含 package.json 的项目目录。在 Terminal 中运行：
 
 ```powershell
-node -v
-npm -v
-npm install
+hexo server
+```
+
+若没有全局 hexo 命令，使用项目现有脚本（无需全局安装）：
+
+```powershell
 npm run server
 ```
 
-4. 浏览器打开 http://localhost:4000/ 。这是完整学术简历首页。
-5. 停止服务：终端按 Ctrl+C。
+两者都启动 Hexo。本地访问 http://localhost:4000/，用导航访问例如 http://localhost:4000/publications.html。Ctrl+C 停止。仅重新打开浏览器或重启电脑不会自动启动服务。
 
-`npm run server` 与 `npx hexo server` 等效。若想直接使用 `hexo server`，先执行一次 `npm install -g hexo-cli`，之后运行 `hexo server`。无需执行 hexo init，本项目已经初始化完毕。
+如果你之前删除了 node_modules，先安装 Node.js 22 LTS 或更新 LTS（https://nodejs.org/，包含 npm），重启 IDEA，然后只需执行一次 `npm install` 恢复依赖。依赖仍在时不需要重新安装。PowerShell 禁止 npm.ps1 时可使用 `npm.cmd run server`。
 
-若 PowerShell 报 npm.ps1 禁止运行，可使用 `npm.cmd install`、`npm.cmd run server`，或将 IDEA Terminal 改为 cmd.exe。若端口被占用：`npx hexo server -p 4001`。修改 _config.yml 后重启服务；数据修改若未刷新也请重启。
+本次修改涉及主题配置，旧 Hexo 服务若仍在运行，请 Ctrl+C 后重新运行。若仍看到旧页面，请浏览器 Ctrl+F5；仅在确有旧输出缓存时执行一次 `npm run clean` 后重新启动。
 
-## 目录与维护入口
+## 修改资料和头像
 
-```text
-_config.yml                       网站 URL、部署根路径、主题
-package.json                      依赖和运行命令
-source/
-  index.md                        首页入口，layout: resume
-  _data/profile.yml               所有个人信息和履历
-  assets/Chen_Huang_CV.pdf         原始简历 PDF
-  assets/images/                  自行放置头像
-  assets/favicon.svg              网站图标
-themes/scholar/
-  _config.yml                     单层导航
-  layout/layout.ejs               HTML、导航、页脚
-  layout/resume.ejs               学术简历页面
-  layout/page.ejs                 未来独立页面通用模板
-  source/css/main.css             颜色、排版、响应式、动画
-  source/js/main.js               菜单、滚动检测、论文筛选
-.github/workflows/pages.yml        GitHub Pages 自动构建部署
-public/                           Hexo 生成结果，不手工编辑
-legacy/                           原 DaoHang 页面与资源，仅供参考
-```
+所有履历仍在 source/_data/profile.yml，本次保留原有资料：
 
-## 修改头像和简历
+- name / initials：姓名与个人视觉缩写。
+- role / institution / focus / intro：首页职位、学校、方向与简介。
+- about / education：About 页面。
+- research / publications / projects / teaching / contact：对应独立页面。
+- updated：手动更新页脚日期。
 
-CV 没有照片，所以当前使用姓名缩写图形占位，不是生成的人像。将照片放入 `source/assets/images/portrait.jpg`（建议竖图），修改 profile.yml：
+没有真实头像时使用 CH 轨道视觉。把头像放到 source/assets/images/portrait.jpg，然后设置：
 
 ```yaml
 avatar: assets/images/portrait.jpg
 ```
 
-路径不要加开头的 `/`；模板会自动处理 GitHub Pages 子目录。姓名、职位、学校、简介、研究方向、教育经历、教学与联系方式都在 profile.yml 中。`initials` 是头像占位的姓名缩写，`updated` 是手动维护的更新时间。修改 PDF 可直接替换 source/assets/Chen_Huang_CV.pdf。设 `cv: ''` 可隐藏 CV 按钮。
+路径不加开头斜杠。模板通过 url_for 自动添加部署子目录。替换 source/assets/Chen_Huang_CV.pdf 即可更新 CV，或修改 cv 字段；留空隐藏按钮。
 
-页面资料从用户提供的 CV 整理。4 篇已发表论文与 1 篇审稿中论文明确分开；教学未虚构课程名称。DOI 沿用简历内容，未另行核验。修改姓名后同时更新网站 _config.yml 的 title 和 author。
-
-## 添加论文、项目与课程
-
-在 profile.yml 的 publications 列表后添加（保持同级缩进，勿用 Tab）：
+添加论文：在 publications 列表按既有缩进添加一项，推荐新论文放前面：
 
 ```yaml
   - title: Your paper title
     authors: 'Huang, C., Other, A., & Other, B.'
     year: 2027
-    venue: Journal name, volume, pages
+    venue: Journal, volume, pages
     status: published
     doi: 10.xxxx/your-doi
 ```
 
-审稿中的稿件使用 `status: review`，无 DOI 使用 `doi: ''`。按数据文件顺序展示；新论文推荐放在列表最前面。DOI 只填编号，不填 https://doi.org/ 前缀。首页统计自动计算。
+审稿中使用 `status: review`，没有 DOI 使用 `doi: ''`。不填写完整 DOI URL。YAML 用空格，勿用 Tab。
 
-项目按 projects 中已有条目复制，url 为空时不展示按钮。teaching.courses 可改为：
+教学页沿用 CV 中实际提供的教学情况，没有编造课程。你可填写：
 
 ```yaml
   courses:
-    - name: 实际课程名称
+    - name: 真实课程名称
       term: 2026 Fall
 ```
 
-## 扩展独立页面
+## 动画和配色
 
-现在导航完整定位首页，点 Home 返回首屏。以后可以创建 source/about/index.md：
+themes/scholar/source/css/main.css 顶部变量控制颜色。主题配置中的 `effects: false` 可关闭全站动画；修改配置后重启 Hexo。
 
-```markdown
----
-title: About
-layout: page
----
-这里填写 Markdown 内容。
-```
+页面底部 Pause effects 可以临时暂停，刷新后恢复默认。遵循 prefers-reduced-motion；无 JavaScript 时资料和导航链接依然存在。Canvas 上限为桌面 95 / 手机 40 颗星，绘制约 30fps；隐藏标签页时暂停动画循环。未加入统计、鼠标行为上传、外部字体、WebGL 或动画依赖。
 
-然后把 themes/scholar/_config.yml 对应导航的 href 改为 `/about/`。公共模板自动保留导航和页脚，不需要引入博客系统。
+## GitHub Pages
 
-## GitHub Pages 部署
+沿用 .github/workflows/pages.yml，不需要安装部署插件。
 
-1. 安装 Git：https://git-scm.com/download/win ，创建 GitHub 账号。
-2. 建立公开仓库 `你的用户名.github.io`（用户名替换为真实 GitHub 用户名）。
-3. 将 _config.yml 修改为：
+1. 当前 _config.yml 地址保留为 `https://chenhuang527.github.io`，root 为 `/`，适用于仓库 `chenhuang527.github.io`。
+2. 将代码提交并推送到 GitHub 仓库的 main 分支。
+3. GitHub 仓库 Settings → Pages → Source 选择 **GitHub Actions**。
+4. 推送 main 会运行工作流；也可在 Actions → Deploy academic homepage → Run workflow 手动触发。
+5. 云端自动安装依赖、生成 public，再发布。成功后访问站点及 `/about.html` 等独立地址。
+
+如果使用普通仓库（例如 academic），请设置：
 
 ```yaml
-url: https://你的用户名.github.io
-root: /
-```
-
-4. 项目终端执行以下命令，把 YOUR_USERNAME 换为真实用户名。若已有 Git 仓库则跳过 git init；若已有 origin，使用 git remote set-url origin 替换地址。
-
-```powershell
-git init
-git add .
-git commit -m "Build academic homepage"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_USERNAME.github.io.git
-git push -u origin main
-```
-
-5. GitHub 仓库 Settings → Pages → Build and deployment → Source 选择 **GitHub Actions**。
-6. Actions 页面选择 Deploy academic homepage → Run workflow；后续推送 main 会自动部署。
-7. 工作流成功后访问 https://你的用户名.github.io/ 。无需手工上传 public 文件夹。
-
-如果仓库名是 academic 而非 用户名.github.io，则改为：
-
-```yaml
-url: https://你的用户名.github.io/academic
+url: https://chenhuang527.github.io/academic
 root: /academic/
 ```
 
-图片、CSS、JavaScript 和导航通过 Hexo url_for 自动适配 root。发布前可运行 `npm run build` 检查是否成功。部署只需静态文件，不需要服务器或数据库。当前任务仅准备部署文件，没有上传或发布到外网。
+务必保留 `pretty_urls.trailing_html: true`，让独立页链接保持 `.html`。模板已统一使用 url_for 适配 root。不要上传 node_modules、public 或本地缓存。此次只修改本地源代码，没有替你提交或触发线上部署。
 
-## 绑定个人域名
+绑定个人域名：在 GitHub Settings → Pages 设置 Custom domain；域名 DNS 的 www CNAME 指向 chenhuang527.github.io；在 source/CNAME 写域名（不加协议），将 _config.yml 的 url 改为 https://你的域名、root 改为 /，提交推送，待证书就绪后开启 Enforce HTTPS。根域名 DNS 记录按官方文档配置。
 
-推荐先使用子域名如 www.example.com：
+官方文档：
+- https://hexo.io/docs/github-pages
+- https://hexo.io/docs/data-files
+- https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site
 
-1. 域名提供商 DNS 中添加 CNAME：主机记录 www，目标 你的用户名.github.io（没有 https://，没有仓库名）。
-2. GitHub 仓库 Settings → Pages → Custom domain 填写 www.example.com，保存。
-3. 新建 source/CNAME，内容只有一行：www.example.com。
-4. 修改 _config.yml：url 为 https://www.example.com，root 为 /，提交并推送。
-5. 等待 DNS 与证书生效后启用 Enforce HTTPS。
+## 本次修改范围与验证说明
 
-根域名 example.com 的 A/AAAA 或 ALIAS 记录请按 GitHub 官方文档配置，不要照抄过时的 IP。建议在 GitHub 账号设置中验证域名。取消绑定时同时处理 DNS、Pages 设置和 source/CNAME。
+修改：_config.yml（保留 .html 后缀）、source/index.md、source/assets/favicon.svg、themes/scholar/_config.yml、layout/layout.ejs、index.ejs、resume.ejs、page.ejs、source/css/main.css、source/js/main.js、README.md。
 
-官方资料：
-- Hexo 数据文件：https://hexo.io/docs/data-files
-- Hexo 模板：https://hexo.io/docs/templates
-- Hexo GitHub Pages：https://hexo.io/docs/github-pages
-- 域名配置：https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site
+新增：source 下 6 个内页 Markdown、layout/landing.ejs、academic.ejs、_partial 下 7 个内容模板。
 
-## 原项目保留
-
-原 DaoHang 的 index.html、README 和静态资源归档在 legacy/，不参与 Hexo 构建。来源 https://github.com/Monthpity/DaoHang ，原说明称基于 https://github.com/zhheo/HeoWeb 修改。新 scholar 主题独立编写，没有加载旧 jQuery、旧导航卡片或第三方追踪脚本。
+个人数据、CV 和已有部署工作流保留。按本次要求未执行 npm/pnpm 安装、构建或自动化测试，也没有启动新的本地服务。本次改动文件均位于项目内；运行后的最终渲染效果尚未验证。
