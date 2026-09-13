@@ -1,0 +1,20 @@
+{
+  "name": "chen-huang-academic-homepage",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A resume-first academic homepage powered by Hexo",
+  "scripts": {
+    "dev": "hexo server",
+    "server": "hexo server",
+    "build": "hexo generate",
+    "clean": "hexo clean"
+  },
+  "hexo": { "version": "7.3.0" },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "hexo": "7.3.0",
+    "hexo-renderer-ejs": "2.0.0",
+    "hexo-renderer-marked": "7.0.1",
+    "hexo-server": "3.0.0"
+  }
+}

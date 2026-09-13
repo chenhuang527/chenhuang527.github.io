@@ -1,0 +1,48 @@
+<% const p = site.data.profile; const published = p.publications.filter(item => item.status === 'published'); %>
+<section id="home" class="hero container">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="status-dot"></span> ACADEMIC PROFILE / RESUME</p>
+    <h1><%= p.name.split(' ').slice(0,-1).join(' ') %><br><em><%= p.name.split(' ').slice(-1)[0] %>.</em></h1>
+    <p class="hero-role"><%= p.role %></p>
+    <p class="hero-institution"><%= p.institution %></p>
+    <p class="hero-intro"><%= p.intro %></p>
+    <div class="hero-actions"><a class="button primary" href="#publications">Explore my research <span>↗</span></a><% if(p.cv) { %><a class="button secondary" href="<%= url_for('/' + p.cv) %>" target="_blank" rel="noopener">View CV <span>↓</span></a><% } %></div>
+    <p class="location"><span aria-hidden="true">⌖</span> <%= p.location %></p>
+  </div>
+  <div class="hero-visual">
+    <div class="portrait-frame">
+      <% if (p.avatar) { %><img class="portrait" src="<%= url_for('/' + p.avatar) %>" alt="Portrait of <%= p.name %>" width="440" height="480"><% } else { %>
+      <div class="portrait-placeholder" role="img" aria-label="<%= p.name %> monogram; portrait forthcoming"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><span class="portrait-initials"><%= p.initials %><i>.</i></span><span class="portrait-note">LANGUAGE × VISION × KNOWLEDGE</span></div>
+      <% } %>
+      <div class="portrait-caption"><span class="small-label">RESEARCH FOCUS</span><p><%= p.tagline %></p></div>
+    </div>
+    <span class="visual-side-label">CURIOSITY IN EVERY CONNECTION</span>
+  </div>
+</section>
+<div class="focus-strip"><div class="container"><span class="small-label">EXPLORING THE INTERSECTION OF</span><p><%= p.focus %></p><span aria-hidden="true">↓</span></div></div>
+<section id="about" class="section container reveal">
+  <div class="section-heading"><p class="eyebrow">01 / INTRODUCTION</p><h2>About Me<span>.</span></h2></div>
+  <div class="about-grid"><div class="prose"><% p.about.forEach(paragraph => { %><p><%= paragraph %></p><% }); %></div><aside class="at-a-glance"><span class="small-label">AT A GLANCE</span><div><strong><%= published.length %></strong><span>Journal publications</span></div><div><strong><%= p.research.length.toString().padStart(2,'0') %></strong><span>Research directions</span></div><a href="https://orcid.org/<%= p.contact.orcid %>" target="_blank" rel="noopener">ORCID profile ↗</a></aside></div>
+</section>
+<section id="education" class="section container reveal">
+  <div class="section-heading"><p class="eyebrow">02 / ACADEMIC JOURNEY</p><h2>Education<span>.</span></h2></div>
+  <div class="timeline"><% p.education.forEach(item => { %><article class="timeline-item"><div class="timeline-date"><%= item.period %></div><div class="timeline-body"><h3><%= item.degree %></h3><p class="institution"><%= item.institution %></p><p class="muted"><%= item.location %></p><ul><% item.details.forEach(detail => { %><li><%= detail %></li><% }); %></ul></div></article><% }); %></div>
+</section>
+<div class="research-band"><section id="research" class="section container reveal">
+  <div class="section-heading"><p class="eyebrow">03 / QUESTIONS THAT DRIVE ME</p><h2>Research Interests<span>.</span></h2><p>From language to vision, towards a deeper understanding of sentiment.</p></div>
+  <div class="research-grid"><% p.research.forEach(item => { %><article class="research-card"><span class="card-number"><%= item.symbol %> <span aria-hidden="true">↗</span></span><h3><%= item.title %></h3><p><%= item.description %></p><div class="tags"><% item.tags.forEach(tag => { %><span><%= tag %></span><% }); %></div></article><% }); %></div>
+</section></div>
+<section id="publications" class="section container reveal">
+  <div class="section-heading heading-row"><div><p class="eyebrow">04 / RESEARCH OUTPUT</p><h2>Publications<span>.</span></h2></div><div class="publication-filters" role="group" aria-label="Filter publications"><button class="active" data-filter="all" aria-pressed="true">All</button><button data-filter="published" aria-pressed="false">Published</button><button data-filter="review" aria-pressed="false">Under review</button></div></div>
+  <p class="filter-summary" aria-live="polite"><%= p.publications.length %> publications and manuscripts</p>
+  <div class="publication-list"><% p.publications.forEach((item, index) => { %><article class="publication" data-status="<%= item.status %>"><div class="publication-year"><%= item.year %><span><%= String(index + 1).padStart(2,'0') %></span></div><div><span class="publication-status <%= item.status %>"><%= item.status === 'review' ? 'UNDER REVIEW' : 'JOURNAL ARTICLE' %></span><h3><% if(item.doi) { %><a href="https://doi.org/<%= item.doi %>" target="_blank" rel="noopener"><%= item.title %></a><% } else { %><%= item.title %><% } %></h3><p class="authors"><%= item.authors %></p><p class="venue"><%= item.venue %></p></div><% if(item.doi) { %><a class="doi-link" href="https://doi.org/<%= item.doi %>" target="_blank" rel="noopener" aria-label="DOI for <%= item.title %>">DOI ↗</a><% } %></article><% }); %></div>
+</section>
+<section id="projects" class="section container reveal">
+  <div class="section-heading"><p class="eyebrow">05 / IDEAS INTO PRACTICE</p><h2>Projects & Research<span>.</span></h2></div>
+  <div class="project-grid"><% p.projects.forEach(item => { %><article class="project-card"><div class="project-meta"><span><%= item.role %></span><span><%= item.period %></span></div><h3><%= item.title %></h3><p><%= item.description %></p><div class="project-bottom"><span><%= item.organization %></span><% if(item.url) { %><a href="<%= item.url %>" target="_blank" rel="noopener">View project ↗</a><% } %></div></article><% }); %></div>
+</section>
+<section id="teaching" class="section container reveal">
+  <div class="section-heading"><p class="eyebrow">06 / SHARING KNOWLEDGE</p><h2>Teaching<span>.</span></h2></div>
+  <div class="teaching-panel"><span class="teaching-icon" aria-hidden="true">▤</span><div><span class="small-label"><%= p.teaching.period %></span><h3><%= p.teaching.title %></h3><p><%= p.teaching.description %></p><% if(p.teaching.courses.length) { %><ul><% p.teaching.courses.forEach(course => { %><li><%= course.name %> · <%= course.term %></li><% }); %></ul><% } %></div></div>
+</section>
+<section id="contact" class="contact-section reveal"><div class="container contact-grid"><div><p class="eyebrow">07 / GET IN TOUCH</p><h2>Let’s connect<span>.</span></h2><p><%= p.contact.message %></p><a class="contact-email" href="mailto:<%= p.contact.email %>"><%= p.contact.email %> ↗</a></div><div class="contact-details"><span class="small-label">BASED AT</span><p><%= p.department %><br><%= p.institution %><br><%= p.location %></p><a href="https://orcid.org/<%= p.contact.orcid %>" target="_blank" rel="noopener">ORCID <%= p.contact.orcid %> ↗</a><% p.contact.links.forEach(link => { %><a href="<%= link.url %>" target="_blank" rel="noopener"><%= link.label %> ↗</a><% }); %></div></div></section>
