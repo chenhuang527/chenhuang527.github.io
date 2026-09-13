@@ -4,5 +4,5 @@
     <% if (page.section === 'about') { %><%- partial('_partial/about') %><%- partial('_partial/education') %>
     <% } else if (['research', 'publications', 'projects', 'teaching', 'contact'].includes(page.section)) { %><%- partial('_partial/' + page.section) %><% } %>
   </div>
-  <a class="back-home" href="<%= url_for('/') %>">← Back to the stars</a>
+  <a class="back-home" href="<%= url_for('/') %>">← Back to Home</a>
 </div>

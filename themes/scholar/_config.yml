@@ -7,5 +7,5 @@ navigation:
   - { label: Projects, key: projects, href: '/projects.html' }
   - { label: Teaching, key: teaching, href: '/teaching.html' }
   - { label: Contact, key: contact, href: '/contact.html' }
-# false 关闭全站背景动画与元素浮动。
+# false 关闭轻微入场动画与卡片上的像素粒子。
 effects: true

@@ -1,20 +1,32 @@
 <% const p = site.data.profile; %>
 <section class="landing container" aria-labelledby="hero-name">
   <div class="hero-copy">
-    <p class="eyebrow"><span class="signal"></span> LANGUAGE, THROUGH A DIFFERENT LENS</p>
-    <h1 id="hero-name"><%= p.name.split(' ').slice(0,-1).join(' ') %><br><span><%= p.name.split(' ').slice(-1)[0] %><i>.</i></span></h1>
+    <p class="eyebrow"><span class="pixel-mark" aria-hidden="true"></span> ACADEMIC HOMEPAGE</p>
+    <h1 id="hero-name"><%= p.name %><i>.</i></h1>
     <div class="hero-position"><p class="hero-role"><%= p.role %></p><p class="hero-institution"><%= p.institution %></p></div>
-    <p class="hero-focus"><%= p.focus %></p><p class="hero-intro"><%= p.intro %></p>
+    <div class="hero-research"><h2>Research Interests</h2><p class="hero-focus"><%= p.focus %></p></div>
+    <p class="hero-intro"><%= p.intro %></p>
     <div class="hero-actions"><a class="button primary" href="<%= url_for('/research.html') %>">View Research <span aria-hidden="true">↗</span></a><% if(p.cv) { %><a class="button secondary" href="<%= url_for('/' + p.cv) %>" target="_blank" rel="noopener">View CV <span aria-hidden="true">↓</span></a><% } %></div>
   </div>
-  <div class="hero-visual" aria-label="<%= p.name %> personal visual"><div class="orbital-scene">
-    <div class="orbit-frame" aria-hidden="true"><span class="orbit-caption">EXPLORING CONNECTIONS</span><span class="orbit-coordinates">NLP / MULTIMODAL LEARNING</span><b class="cross cross-one">+</b><b class="cross cross-two">+</b></div>
-    <div class="orbital-system">
-      <div class="orbital-ring ring-outer" aria-hidden="true"></div><div class="orbital-ring ring-middle" aria-hidden="true"></div><div class="orbital-ring ring-inner" aria-hidden="true"></div>
-      <% if(p.avatar) { %><div class="planet has-portrait"><img src="<%= url_for('/' + p.avatar) %>" alt="Portrait of <%= p.name %>" width="400" height="400"></div><% } else { %><div class="planet"><div class="planet-grid" aria-hidden="true"></div><span class="planet-monogram"><%= p.initials %><i>.</i></span></div><% } %>
-      <span class="satellite satellite-one" aria-hidden="true"></span><span class="satellite satellite-two" aria-hidden="true"></span>
-      <span class="orbit-label label-language">01 <b>Language</b></span><span class="orbit-label label-vision">02 <b>Vision</b></span><span class="orbit-label label-knowledge">03 <b>Knowledge</b></span>
+  <figure class="hero-visual">
+    <div class="personal-card">
+      <div class="card-topline"><span class="small-label">A LITTLE CURIOSITY</span><span class="pixel-spark" aria-hidden="true">✦</span></div>
+      <div class="pixel-scene">
+        <% if(p.avatar) { %><img class="portrait" src="<%= url_for('/' + p.avatar) %>" alt="Portrait of <%= p.name %>" width="320" height="280"><% } else { %>
+        <svg class="pixel-landscape" viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-hidden="true">
+          <rect width="320" height="280" fill="#eff1fa"/>
+          <path d="M30 48h12v-8h28v8h12v8h10v12H22V56h8z" fill="#fffdf9"/>
+          <path d="M221 84h12v-9h22v9h12v8h11v11h-68V92h11z" fill="#fffdf9"/>
+          <path d="M261 32h6v6h6v6h-6v6h-6v-6h-6v-6h6z" fill="#d4c390"/>
+          <path d="M0 230h20v-16h20v-20h20v-17h20v-13h20v18h20v17h20v17h20v19h30v45H0z" fill="#dddfee"/>
+          <path d="M149 244h24v-19h20v-18h20v-20h20v-12h20v19h20v17h20v18h27v51H149z" fill="#d0d8e8"/>
+          <path d="M0 259h35v-7h45v9h40v-5h51v8h49v-11h44v5h56v22H0z" fill="#c8d7cb"/>
+          <path d="M42 252v-13h4v6h4v-10h4v17zm230 2v-12h4v5h4v-9h4v16z" fill="#a1b4a8"/>
+        </svg>
+        <span class="scene-initials" aria-label="<%= p.name %> initials"><%= p.initials %><i>.</i></span>
+        <% } %>
+      </div>
+      <figcaption><span class="caption-name"><%= p.name %></span><p><%= p.tagline %></p></figcaption>
     </div>
-    <p class="visual-caption"><span></span><%= p.tagline %></p>
-  </div></div>
+  </figure>
 </section>
