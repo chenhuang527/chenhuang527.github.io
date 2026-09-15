@@ -7,5 +7,5 @@ navigation:
   - { label: Projects, key: projects, href: '/projects.html' }
   - { label: Teaching, key: teaching, href: '/teaching.html' }
   - { label: Contact, key: contact, href: '/contact.html' }
-# false 关闭轻微入场动画与卡片上的像素粒子。
+# false 关闭云朵、角色 idle 和页面进入动画。
 effects: true
